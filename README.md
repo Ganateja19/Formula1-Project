@@ -128,3 +128,13 @@ Extracting insights and presenting the data through SQL Views and PySpark DataFr
 * **Data Governance**: Databricks Unity Catalog
 * **Language**: PySpark (Python) & SQL
 * **Data Format**: Delta Lake (Delta Tables)
+
+## 🚀 Automated Workflows (Databricks Jobs)
+
+The data pipeline execution is orchestrated using Databricks Workflows (Jobs). Below are the visualizations of the job runs demonstrating the successful orchestration of tasks across the Medallion architecture.
+
+### Data Ingestion and Transformation Workflow
+![Databricks Job 1](Job1.png)
+
+### Data Aggregation and Analytics Workflow
+![Databricks Job 2](job2.png)
