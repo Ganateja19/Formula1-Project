@@ -1,166 +1,148 @@
-# Formula 1 Data Engineering Project (Azure Databricks)
+<div align="center">
+  <h1>🏎️ Formula 1 Data Engineering Project</h1>
+  <p><i>An End-to-End Azure Databricks Pipeline using the Medallion Architecture</i></p>
 
-This repository contains a complete Data Engineering project built using **Azure Databricks**, **PySpark**, and **Unity Catalog** to process and analyze Formula 1 data. The project follows the **Medallion Architecture** (Bronze, Silver, and Gold layers) for structuring data in the data lakehouse.
+  ![Azure](https://img.shields.io/badge/Azure-0089D6?style=for-the-badge&logo=microsoft-azure&logoColor=white)
+  ![Databricks](https://img.shields.io/badge/Databricks-FF3621?style=for-the-badge&logo=databricks&logoColor=white)
+  ![PySpark](https://img.shields.io/badge/PySpark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
+  ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+  ![Delta Lake](https://img.shields.io/badge/Delta_Lake-00A4EF?style=for-the-badge&logo=databricks&logoColor=white)
+</div>
 
-> **Note**: I have explored this project further and implemented **Incremental Data Loading** techniques in another repository. Please check out the advanced implementation here: [Formula1-project-incremental-load](https://github.com/Ganateja19/Formula1-project-incremental-load)
+---
+
+> **🚀 Advanced Exploration**: I have explored this project further and implemented **Incremental Data Loading** techniques in another repository. Please check out the advanced implementation here: [Formula1-project-incremental-load](https://github.com/Ganateja19/Formula1-project-incremental-load)
 
 ## 🏗️ Project Architecture & Data Flow
 
-The project is structured into multiple stages from raw file ingestion to actionable analytics.
+This project is built on the highly scalable **Medallion Architecture**, progressing raw files all the way to curated business-level aggregates.
+
+```mermaid
+graph LR
+    %% Modern Canvas-Friendly Styling
+    classDef source fill:#1e1e1e,stroke:#0078d4,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+    classDef bronze fill:#cd7f32,stroke:#8b4513,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+    classDef silver fill:#c0c0c0,stroke:#808080,stroke-width:2px,color:#111,rx:5px,ry:5px;
+    classDef gold fill:#ffd700,stroke:#b8860b,stroke-width:2px,color:#111,rx:5px,ry:5px;
+    classDef analytics fill:#00aba9,stroke:#006a68,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+
+    %% Nodes
+    A[(fa:fa-cloud Azure ADLS<br/>Landing Zone)]:::source
+    B[fa:fa-filter Bronze Layer<br/>Raw Data]:::bronze
+    C[fa:fa-cogs Silver Layer<br/>Cleansed Data]:::silver
+    D[fa:fa-database Gold Layer<br/>Aggregated Data]:::gold
+    E[fa:fa-chart-bar Analytics<br/>Views & Reports]:::analytics
+
+    %% Relationships
+    A -->|JSON/CSV Ingestion| B
+    B -->|PySpark Transforms| C
+    C -->|Fact/Dim Modelling| D
+    D -->|SQL Dashboards| E
+```
+
+<details>
+<summary><b>Click to expand detailed Data Lineage</b></summary>
 
 ```mermaid
 flowchart TD
-    %% Define Styles
-    classDef storage fill:#282a36,stroke:#bd93f9,stroke-width:2px,color:#f8f8f2;
-    classDef bronze fill:#44475a,stroke:#ff5555,stroke-width:2px,color:#f8f8f2;
-    classDef silver fill:#44475a,stroke:#f1fa8c,stroke-width:2px,color:#f8f8f2;
-    classDef gold fill:#44475a,stroke:#50fa7b,stroke-width:2px,color:#f8f8f2;
-    classDef analytics fill:#44475a,stroke:#8be9fd,stroke-width:2px,color:#f8f8f2;
+    %% Lineage Styles
+    classDef default fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff;
+    classDef highlight fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff;
 
-    %% Data Sources
-    A[fa:fa-database Azure Data Lake Storage<br>Landing Zone / Volumes]:::storage
-
-    %% Ingestion
-    subgraph Bronze [Bronze Layer - Raw Data Ingestion]
-        direction TB
-        B1(Circuits):::bronze
-        B2(Races):::bronze
-        B3(Constructors):::bronze
-        B4(Drivers):::bronze
-        B5(Results & Sprints):::bronze
+    subgraph Bronze [Raw Ingestion]
+        B1(Circuits)
+        B2(Races)
+        B3(Constructors)
+        B4(Drivers)
+        B5(Results/Sprints)
     end
 
-    %% Transformation
-    subgraph Silver [Silver Layer - Cleansed & Transformed]
-        direction TB
-        S1(Cleaned Circuits):::silver
-        S2(Cleaned Races):::silver
-        S3(Cleaned Constructors):::silver
-        S4(Cleaned Drivers):::silver
-        S5(Cleaned Results & Sprints):::silver
+    subgraph Silver [Cleansed Transformation]
+        S1(Cleaned Circuits)
+        S2(Cleaned Races)
+        S3(Cleaned Constructors)
+        S4(Cleaned Drivers)
+        S5(Cleaned Results/Sprints)
     end
 
-    %% Aggregation
-    subgraph Gold [Gold Layer - Dimensional Data]
-        direction TB
-        G1[(Races Dimension)]:::gold
-        G2[(Constructors Dimension)]:::gold
-        G3[(Drivers Dimension)]:::gold
-        G4[(Results Fact)]:::gold
+    subgraph Gold [Dimensional Aggregation]
+        G1[(Races Dim)]
+        G2[(Constructors Dim)]
+        G3[(Drivers Dim)]
+        G4[(Results Fact)]
     end
 
-    %% Analytics
-    subgraph Analytics [Analytics & Reporting]
-        direction TB
-        An1[Driver Standings]:::analytics
-        An2[Constructor Standings]:::analytics
-        An3[Dominant Drivers Analysis]:::analytics
-        An4[Dominant Constructors Analysis]:::analytics
-    end
-
-    A ==> Bronze
     B1 --> S1
     B2 --> S2
     B3 --> S3
     B4 --> S4
     B5 --> S5
 
-    Silver ==> Gold
-    
     S1 -.-> G1
     S2 -.-> G1
     S3 -.-> G2
     S4 -.-> G3
     S5 -.-> G4
-
-    Gold ==> Analytics
 ```
+</details>
+
+---
 
 ## 📂 Project Structure
 
-```mermaid
-mindmap
-  root((Formula 1<br/>Project))
-    00_Common
-      environment_config
-      bronze_helpers
-    01_Setup
-      Project_Environment_SQL
-    02_Bronze
-      Ingest_Raw_Files
-    03_Silver
-      Transform_Data
-    04_Gold
-      Build_Dimensions
-      Build_Facts
-    05_Analytics
-      Standings_Views
-      Dominant_Analysis
-```
+A clean, modular directory structure ensuring maintainability and scalability across the data lifecycle.
 
-### 1. Setup & Common (00-common, 01-setup)
-- Configuring the Databricks environment.
-- Creating the Unity Catalog, External Locations (`databrickscoursextdl1_formula1`), and Schemas (`landing`, `bronze`, `silver`, `gold`).
-- Reusable helper scripts.
+| Directory | Purpose | Key Contents |
+| :--- | :--- | :--- |
+| ⚙️ **`00-common`** | Shared configurations and utilities | `environment_config`, `bronze_helpers` |
+| 🛠️ **`01-setup`** | Environment initialization and DDL | Unity Catalog setups, External Locations, Schemas |
+| 🥉 **`02-bronze`** | Landing to Bronze ingestion scripts | Raw delta table ingestion logic |
+| 🥈 **`03-silver`** | Bronze to Silver transformations | Data cleansing, schema enforcement, null handling |
+| 🥇 **`04-gold`** | Silver to Gold aggregations | Dimensional modeling (Facts & Dimensions) |
+| 📊 **`05-analytics`** | Business insights and reporting | Standings SQL Views, Dominant Team Analysis |
 
-### 2. Bronze Layer (02-bronze)
-Ingesting raw data files (JSON, CSV) from the Landing Zone into the Databricks Bronze layer as Delta Tables.
-- Circuits, Races, Constructors, Drivers, Results, and Sprints.
-
-### 3. Silver Layer (03-silver)
-Applying transformations, cleansing, handling nulls, and standardizing schemas.
-- Data is read from the Bronze layer, transformed using PySpark, and written back to the Silver layer as Delta Tables.
-
-### 4. Gold Layer (04-gold)
-Building Fact and Dimension tables for Business Intelligence (BI) and reporting.
-- Joining and aggregating Silver layer tables to create business-level metrics.
-- `Races`, `Constructors`, `Drivers` dimensions, and `Results` fact table.
-
-### 5. Analytics (05-analytics)
-Extracting insights and presenting the data through SQL Views and PySpark DataFrames.
-- Driver and Constructor standings.
-- Analyzing historically dominant drivers and constructors.
-
-## 🛠️ Technologies Used
-* **Cloud Platform**: Microsoft Azure
-* **Compute**: Azure Databricks
-* **Storage**: Azure Data Lake Storage Gen2 (ADLS Gen2)
-* **Data Governance**: Databricks Unity Catalog
-* **Language**: PySpark (Python) & SQL
-* **Data Format**: Delta Lake (Delta Tables)
+---
 
 ## 🚀 Automated Workflows (Databricks Jobs)
 
-The data pipeline execution is orchestrated using Databricks Workflows (Jobs). Below are the visualizations of the job runs demonstrating the successful orchestration of tasks across the Medallion architecture.
+The execution of this pipeline is entirely automated using Databricks Workflows, guaranteeing data reliability and timely processing.
 
-### Data Ingestion and Transformation Workflow
-![Databricks Job 1](Job1.png)
+#### 🔄 Data Ingestion and Transformation Workflow
+<img src="Job1.png" alt="Databricks Job 1" width="800">
 
-### Data Aggregation and Analytics Workflow
-![Databricks Job 2](job2.png)
+#### 📈 Data Aggregation and Analytics Workflow
+<img src="job2.png" alt="Databricks Job 2" width="800">
+
+---
 
 ## 📊 Analytics Dashboards
 
-Here are the visualizations and dashboards created from the processed Formula 1 data.
+We visualized the insights gathered from our Gold layer to produce interactive business-level dashboards.
 
-### Dashboard View 1
-![Analytics Dashboard 1](F1.png)
+<p align="center">
+  <img src="F1.png" alt="Analytics Dashboard 1" width="45%">
+  &nbsp;
+  <img src="F2.png" alt="Analytics Dashboard 2" width="45%">
+</p>
+<p align="center">
+  <img src="F3.png" alt="Analytics Dashboard 3" width="45%">
+  &nbsp;
+  <img src="F4.png" alt="Analytics Dashboard 4" width="45%">
+</p>
 
-### Dashboard View 2
-![Analytics Dashboard 2](F2.png)
+---
 
-### Dashboard View 3
-![Analytics Dashboard 3](F3.png)
+## 🏆 Standings & Results
 
-### Dashboard View 4
-![Analytics Dashboard 4](F4.png)
+Detailed leaderboards constructed from our analytical views. 
 
-## 🏆 Standings
+#### 🏎️ Driver Standings
+<img src="Driver%20Standing.png" alt="Driver Standings" width="800">
 
-Detailed views of the Driver and Constructor standings based on the processed results.
+#### 🏎️ Constructor Standings
+<img src="Constructor%20Standing.png" alt="Constructor Standings" width="800">
 
-### Driver Standings
-![Driver Standings](Driver%20Standing.png)
-
-### Constructor Standings
-![Constructor Standings](Constructor%20Standing.png)
+---
+<div align="center">
+  <i>Built with ❤️ for Data Engineering & Formula 1</i>
+</div>
