@@ -154,3 +154,13 @@ Here are the visualizations and dashboards created from the processed Formula 1 
 
 ### Dashboard View 4
 ![Analytics Dashboard 4](F4.png)
+
+## 🏆 Standings
+
+Detailed views of the Driver and Constructor standings based on the processed results.
+
+### Driver Standings
+![Driver Standings](Driver%20Standing.png)
+
+### Constructor Standings
+![Constructor Standings](Constructor%20Standing.png)
