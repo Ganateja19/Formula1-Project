@@ -138,3 +138,19 @@ The data pipeline execution is orchestrated using Databricks Workflows (Jobs). B
 
 ### Data Aggregation and Analytics Workflow
 ![Databricks Job 2](job2.png)
+
+## 📊 Analytics Dashboards
+
+Here are the visualizations and dashboards created from the processed Formula 1 data.
+
+### Dashboard View 1
+![Analytics Dashboard 1](F1.png)
+
+### Dashboard View 2
+![Analytics Dashboard 2](F2.png)
+
+### Dashboard View 3
+![Analytics Dashboard 3](F3.png)
+
+### Dashboard View 4
+![Analytics Dashboard 4](F4.png)
