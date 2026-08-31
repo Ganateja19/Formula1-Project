@@ -2,7 +2,7 @@
 
 This repository contains a complete Data Engineering project built using **Azure Databricks**, **PySpark**, and **Unity Catalog** to process and analyze Formula 1 data. The project follows the **Medallion Architecture** (Bronze, Silver, and Gold layers) for structuring data in the data lakehouse.
 
-> **Note**: I have explored this project further and implemented **Incremental Data Loading** techniques in another repository. Please check out the advanced implementation here: *(Insert link here)*
+> **Note**: I have explored this project further and implemented **Incremental Data Loading** techniques in another repository. Please check out the advanced implementation here: [Formula1-project-incremental-load](https://github.com/Ganateja19/Formula1-project-incremental-load)
 
 ## 🏗️ Project Architecture & Data Flow
 
