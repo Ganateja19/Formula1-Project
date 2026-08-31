@@ -13,6 +13,22 @@
 
 > **🚀 Advanced Exploration**: I have explored this project further and implemented **Incremental Data Loading** techniques in another repository. Please check out the advanced implementation here: [Formula1-project-incremental-load](https://github.com/Ganateja19/Formula1-project-incremental-load)
 
+## 📖 Project Overview
+
+This repository demonstrates a production-grade **Data Engineering Pipeline** that processes raw Formula 1 data from the Ergast API into a robust Analytics platform. The pipeline heavily leverages **Azure Databricks**, **PySpark**, and **Delta Lake** to ensure data reliability, scalability, and performance.
+
+### 🌟 Key Engineering Highlights
+
+* **Robust Data Ingestion & Metadata:** Raw JSON and CSV files are ingested from an Azure Data Lake Gen2 Landing Zone. The process enriches the data by injecting critical metadata, including **ingestion timestamps** and file source tracking, ensuring every record is fully auditable.
+* **Strict Schema Enforcement:** By leveraging Delta Lake, the pipeline enforces strict schemas at the Silver layer. Corrupt records are handled gracefully, preventing bad data from propagating downstream, while supporting safe schema evolution.
+* **Complete Data Lineage:** Full traceability is maintained through Unity Catalog and Delta Lake's time-travel capabilities. Data flows transparently from the raw source files, through transformations, straight into the final Business Intelligence dashboards.
+* **The Medallion Architecture Strategy:** 
+  * 🥉 **Bronze Layer:** Raw data ingestion appended with `ingestion_date` and audit metadata. Data is stored in Delta format for optimal read performance.
+  * 🥈 **Silver Layer:** Data cleansing, deduplication, schema enforcement, and transformation. Dates are standardized, missing values are handled, and data is structured into clean tables.
+  * 🥇 **Gold Layer:** Business-level aggregation using Dimensional Modeling (Star Schema). The data is modeled into Fact and Dimension tables (e.g., Races, Drivers, Constructors, Results) optimized for fast SQL queries and BI reporting.
+
+---
+
 ## 🏗️ Project Architecture & Data Flow
 
 This project is built on the highly scalable **Medallion Architecture**, progressing raw files all the way to curated business-level aggregates.
@@ -141,8 +157,3 @@ Detailed leaderboards constructed from our analytical views.
 
 #### 🏎️ Constructor Standings
 <img src="Constructor%20Standing.png" alt="Constructor Standings" width="800">
-
----
-<div align="center">
-  <i>Built with ❤️ for Data Engineering & Formula 1</i>
-</div>
